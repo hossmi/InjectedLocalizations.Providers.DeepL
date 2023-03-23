@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using InjectedLocalizations.Configuration;
+using InjectedLocalizations.Exceptions;
 using InjectedLocalizations.Providers;
+using JimenaTools.Extensions.Strings;
 using JimenaTools.Extensions.Validations;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -18,8 +20,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             configuration = new PrvConfiguration();
             deeplOptions(configuration);
-            configuration.ApiKey.ShouldBeFilled(nameof(configuration.ApiKey)); // custom exception
-            configuration.Url.ShouldBeFilled(nameof(configuration.Url)); // custom exception
+
+            if (configuration.ApiKey.IsNullEmptyOrWhiteSpace())
+                throw new DeepLConfigurationException(nameof(configuration.ApiKey));
+
+            if(configuration.Url.IsNullEmptyOrWhiteSpace())
+                throw new DeepLConfigurationException(nameof(configuration.Url));
 
             cultureMap = new PrvCultureMap();
 
