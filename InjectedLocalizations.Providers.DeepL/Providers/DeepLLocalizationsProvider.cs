@@ -21,6 +21,7 @@ namespace InjectedLocalizations.Providers
     public class DeepLLocalizationsProvider : AbstractLocalizationsProvider
     {
         private static readonly CultureInfo englishCulture = new CultureInfo("en");
+        private readonly string sourceEnglishCulture;
         private readonly ITranslator translator;
         private readonly ILogger<DeepLLocalizationsProvider> logger;
         private readonly IDeeplLocalizatonsProviderConfiguration configuration;
@@ -36,6 +37,7 @@ namespace InjectedLocalizations.Providers
             this.configuration = configuration.ShouldBeNotNull(nameof(configuration));
             this.logger = logger.ShouldBeNotNull(nameof(logger));
             this.deeplCultureMap = deeplCultureMap.ShouldBeNotNull(nameof(deeplCultureMap));
+            this.sourceEnglishCulture = this.deeplCultureMap.MapToDeepl(englishCulture);
             this.parser = parser.ShouldBeNotNull(nameof(parser));
 
             this.translator = new Translator(this.configuration.ApiKey, new TranslatorOptions
@@ -51,17 +53,14 @@ namespace InjectedLocalizations.Providers
 
         protected override IReadOnlyDictionary<MemberInfo, string> GetLocalizationsOrNull(ILocalizationRequest request)
         {
-            GlossaryInfo glossary;
             CancellationTokenSource tokenSource;
             Dictionary<MemberInfo, string> localizations;
-            TextTranslateOptions translateOptions;
             IEnumerable<IParsedMember> parsedMembers;
-            string requestDeeplCulture, sourceDeeplCulture;
+            string requestDeeplCulture;
 
             if (request.Culture.Equals(englishCulture))
                 return null;
 
-            sourceDeeplCulture = this.deeplCultureMap.MapToDeepl(englishCulture);
             requestDeeplCulture = this.deeplCultureMap.MapToDeepl(request.Culture);
 
             tokenSource = new CancellationTokenSource();
@@ -73,15 +72,7 @@ namespace InjectedLocalizations.Providers
 
             try
             {
-                //glossary = this.translator
-                //    .GetOrCreateGlossary(sourceDeeplCulture, requestDeeplCulture, tokenSource.Token)
-                //    .Result;
-
                 localizations = new Dictionary<MemberInfo, string>();
-                translateOptions = new TextTranslateOptions
-                {
-                    //GlossaryId = glossary.GlossaryId,
-                };
 
                 foreach (IParsedMember parsedMember in parsedMembers)
                 {
@@ -99,11 +90,10 @@ namespace InjectedLocalizations.Providers
                     if (parameterNamesArray.Length > 0)
                     {
                         result = this.translator
-                            .TranslateTextAsync(parameterNamesArray.AsJoinedWith(Environment.NewLine)
-                                , sourceDeeplCulture
+                            .TranslateTextAsync(parameterNamesArray.MergedWith(Environment.NewLine)
+                                , this.sourceEnglishCulture
                                 , requestDeeplCulture
-                                , translateOptions
-                                , tokenSource.Token)
+                                , cancellationToken: tokenSource.Token)
                             .Result;
 
                         translatedNamesArray = result
@@ -131,14 +121,13 @@ namespace InjectedLocalizations.Providers
                             else
                                 return p.Value;
                         })
-                        .AsJoined();
+                        .Merged();
 
                     result = this.translator
                         .TranslateTextAsync(deeplString
-                            , sourceDeeplCulture
+                            , this.sourceEnglishCulture
                             , requestDeeplCulture
-                            , translateOptions
-                            , tokenSource.Token)
+                            , cancellationToken: tokenSource.Token)
                         .Result;
 
                     interpolatedTranslatedText = result.Text;
