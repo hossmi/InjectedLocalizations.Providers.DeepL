@@ -41,7 +41,7 @@ namespace InjectedLocalizations.Providers
             this.translator = new Translator(this.configuration.ApiKey, new TranslatorOptions
             {
                 ServerUrl = this.configuration.Url,
-            }).ShouldBeNotNull(nameof(Translator)); // TODO custom exception
+            }) ?? throw new DeepLApiException();
         }
 
         public override bool CanIssueToWriters => true;
