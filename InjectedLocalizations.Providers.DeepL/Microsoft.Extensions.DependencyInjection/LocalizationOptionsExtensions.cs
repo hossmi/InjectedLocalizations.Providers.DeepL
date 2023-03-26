@@ -4,8 +4,8 @@ using System.Globalization;
 using InjectedLocalizations.Configuration;
 using InjectedLocalizations.Exceptions;
 using InjectedLocalizations.Providers;
+using JimenaTools.Extensions.Enumerables;
 using JimenaTools.Extensions.Strings;
-using JimenaTools.Extensions.Validations;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -27,42 +27,29 @@ namespace Microsoft.Extensions.DependencyInjection
             if(configuration.Url.IsNullEmptyOrWhiteSpace())
                 throw new DeepLConfigurationException(nameof(configuration.Url));
 
-            cultureMap = new PrvCultureMap();
-
+            configuration.CultureMap ??= BuildDefaultCultureMapValues().ToDictionary();
             options.AddService(typeof(IDeeplLocalizatonsProviderConfiguration), configuration);
+
+            cultureMap = new DefaultDeepLCultureMap(configuration.CultureMap);
             options.AddService(typeof(IDeeplCultureMap), cultureMap);
+            
             options.SetProvider<DeepLLocalizationsProvider>(priority);
 
             return options;
+        }
+
+        public static IEnumerable<KeyValuePair<CultureInfo, string>> BuildDefaultCultureMapValues()
+        {
+            yield return new KeyValuePair<CultureInfo, string>(new CultureInfo("en"), "EN");
+            yield return new KeyValuePair<CultureInfo, string>(new CultureInfo("es"), "ES");
+            yield return new KeyValuePair<CultureInfo, string>(new CultureInfo("pt"), "PT-PT");
         }
 
         private class PrvConfiguration : IDeeplLocalizatonsProviderConfiguration, IDeeplOptions
         {
             public string ApiKey { get; set; }
             public string Url { get; set; }
-        }
-
-        private class PrvCultureMap : IDeeplCultureMap
-        {
-            private readonly IReadOnlyDictionary<CultureInfo, string> cultureToDeeplMap;
-
-            public PrvCultureMap()
-            {
-                this.cultureToDeeplMap = new Dictionary<CultureInfo, string>
-                {
-                    { new CultureInfo("en"), "EN" },
-                    { new CultureInfo("es"), "ES" },
-                    { new CultureInfo("pt"), "PT-PT" },
-                };
-            }
-
-            public string MapToDeepl(CultureInfo culture)
-            {
-                if(this.cultureToDeeplMap.TryGetValue(culture, out string map))
-                    return map;
-
-                return culture.TwoLetterISOLanguageName;
-            }
+            public IReadOnlyDictionary<CultureInfo, string> CultureMap { get; set; }
         }
     }
 }
