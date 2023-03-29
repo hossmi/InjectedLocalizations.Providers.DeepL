@@ -54,16 +54,14 @@ namespace InjectedLocalizations.Providers
         protected override IReadOnlyDictionary<MemberInfo, string> GetLocalizationsOrNull(ILocalizationRequest request)
         {
             CancellationTokenSource tokenSource;
-            Dictionary<MemberInfo, string> localizations;
             IEnumerable<IParsedMember> parsedMembers;
             string requestDeeplCulture;
 
             if (request.Culture.Equals(englishCulture))
                 return null;
 
-            requestDeeplCulture = this.deeplCultureMap.MapToDeepl(request.Culture);
-
             tokenSource = new CancellationTokenSource();
+            requestDeeplCulture = this.deeplCultureMap.MapToDeepl(request.Culture);
             parsedMembers = request
                 .InterfaceType
                 .GetMethodsAndProperties()
@@ -72,85 +70,24 @@ namespace InjectedLocalizations.Providers
 
             try
             {
-                localizations = new Dictionary<MemberInfo, string>();
-
-                foreach (IParsedMember parsedMember in parsedMembers)
-                {
-                    string deeplString, interpolatedTranslatedText;
-                    string[] parameterNamesArray, translatedNamesArray;
-                    TextResult result;
-                    IEnumerable<PrvTranslatedParameter> translatedParameters;
-
-                    parameterNamesArray = parsedMember
-                        .Where(m => m is ParameterToken)
-                        .Cast<ParameterToken>()
-                        .Select(p => $"{{{p.Value}}}")
-                        .ToArray();
-
-                    if (parameterNamesArray.Length > 0)
+                return parsedMembers
+                    .Select(parsedMember =>
                     {
-                        result = this.translator
-                            .TranslateTextAsync(parameterNamesArray.MergedWith(Environment.NewLine)
+                        string text = this.translator
+                            .TranslateMember(parsedMember
                                 , this.sourceEnglishCulture
                                 , requestDeeplCulture
-                                , cancellationToken: tokenSource.Token)
-                            .Result;
+                                , tokenSource.Token);
 
-                        translatedNamesArray = result
-                            .Text
-                            .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
-                            .ToArray();
-
-                        translatedParameters = parameterNamesArray
-                            .Select((p, i) => new PrvTranslatedParameter
-                            {
-                                Translated = translatedNamesArray[i],
-                                Parameter = p,
-                            });
-                    }
-                    else
-                        translatedParameters = Enumerable.Empty<PrvTranslatedParameter>();
-
-                    deeplString = parsedMember
-                        .Where(p => p is IPrintableToken)
-                        .Cast<IPrintableToken>()
-                        .Select(p =>
-                        {
-                            if (p is ParameterToken parameterToken)
-                                return $"{{{parameterToken.Value}}}";
-                            else
-                                return p.Value;
-                        })
-                        .Merged();
-
-                    result = this.translator
-                        .TranslateTextAsync(deeplString
-                            , this.sourceEnglishCulture
-                            , requestDeeplCulture
-                            , cancellationToken: tokenSource.Token)
-                        .Result;
-
-                    interpolatedTranslatedText = result.Text;
-
-                    translatedParameters
-                        .AndApply(p => interpolatedTranslatedText = interpolatedTranslatedText.Replace(p.Translated, p.Parameter));
-
-                    localizations.Add(parsedMember.Member, interpolatedTranslatedText);
-                }
-
-                return localizations;
+                        return new KeyValuePair<MemberInfo, string>(parsedMember.Member, text);
+                    })
+                    .ToDictionary();
             }
             catch (DeepLException ex)
             {
                 this.logger.LogError(ex, $"Troubles during {nameof(GetLocalizationsOrNull)}!");
                 return null;
             }
-        }
-
-        private class PrvTranslatedParameter
-        {
-            public string Translated { get; set; }
-            public string Parameter { get; set; }
         }
     }
 }
