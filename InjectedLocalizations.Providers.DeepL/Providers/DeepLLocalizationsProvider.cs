@@ -73,7 +73,8 @@ namespace InjectedLocalizations.Providers
                             .TranslateMember(parsedMember
                                 , this.sourceEnglishCulture
                                 , requestDeeplCulture
-                                , tokenSource.Token);
+                                , tokenSource.Token)
+                            .Result;
 
                         return new KeyValuePair<MemberInfo, string>(parsedMember.Member, text);
                     })

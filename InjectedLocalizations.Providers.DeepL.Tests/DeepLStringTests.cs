@@ -16,7 +16,7 @@ namespace InjectedLocalizations
         public void Can_get_DeepLString_from_parameterless_member()
         {
             IParsedMember parsedMember;
-            string text; 
+            string text;
 
             parsedMember = FakeParsedMember.BuildFor<ISampleInterface>(nameof(ISampleInterface.The_file_already_exists)
                 , new CapitalWordToken("The")
@@ -45,7 +45,6 @@ namespace InjectedLocalizations
             parameters = typeof(ISampleInterface)
                 .GetMethod(nameof(ISampleInterface.There_are_0_apples))
                 .GetParameters();
-                
 
             parsedMember = FakeParsedMember
                 .BuildFor<ISampleInterface>(nameof(ISampleInterface.There_are_0_apples)

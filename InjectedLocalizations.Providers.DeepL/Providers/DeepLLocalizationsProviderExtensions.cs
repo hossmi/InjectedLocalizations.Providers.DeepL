@@ -50,13 +50,14 @@ namespace InjectedLocalizations.Providers
             return $"Parameters_EN_to_{targetCulture.Replace("-", "")}";
         }
 
-        public static IEnumerable<TranslatedParameter> GetTranslatedParameters(this ITranslator translator
+        public static async Task<IReadOnlyCollection<TranslatedParameter>> GetTranslatedParameters(this ITranslator translator
             , string sourceEnglishCulture
             , string requestDeeplCulture
             , IParsedMember parsedMember
             , CancellationToken cancellationToken)
         {
             string[] parameterNames, translatedNamesArray;
+            string mergedParameters;
 
             parameterNames = parsedMember
                 .Where(m => m is ParameterToken)
@@ -65,14 +66,14 @@ namespace InjectedLocalizations.Providers
                 .ToArray();
 
             if (parameterNames.Length == 0)
-                return Enumerable.Empty<TranslatedParameter>();
+                return new TranslatedParameter[0];
 
-            translatedNamesArray = translator
-                .TranslateTextAsync(parameterNames.MergedWith(Environment.NewLine)
+            mergedParameters = parameterNames.MergedWith(Environment.NewLine);
+            translatedNamesArray = (await translator
+                .TranslateTextAsync(mergedParameters
                     , sourceEnglishCulture
                     , requestDeeplCulture
-                    , cancellationToken: cancellationToken)
-                .Result
+                    , cancellationToken: cancellationToken))
                 .Text
                 .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
 
@@ -81,7 +82,8 @@ namespace InjectedLocalizations.Providers
                 {
                     Translated = translatedNamesArray[i],
                     Parameter = p,
-                });
+                })
+                .ToList();
         }
 
         public static IEnumerable<string> AsDeepLString(this IParsedMember parsedMember)
@@ -94,16 +96,16 @@ namespace InjectedLocalizations.Providers
                         yield return printable.Value;
         }
 
-        public static string TranslateMember(this ITranslator translator
+        public static async Task<string> TranslateMember(this ITranslator translator
             , IParsedMember parsedMember
             , string sourceEnglishCulture
             , string requestDeeplCulture
             , CancellationToken cancellationToken)
         {
-            IEnumerable<TranslatedParameter> translatedParameters;
+            IReadOnlyCollection<TranslatedParameter> translatedParameters;
             string deeplString, interpolatedTranslatedText;
 
-            translatedParameters = translator.GetTranslatedParameters(
+            translatedParameters = await translator.GetTranslatedParameters(
                 sourceEnglishCulture
                 , requestDeeplCulture
                 , parsedMember
@@ -113,12 +115,11 @@ namespace InjectedLocalizations.Providers
                 .AsDeepLString()
                 .Merged();
 
-            interpolatedTranslatedText = translator
+            interpolatedTranslatedText = (await translator
                 .TranslateTextAsync(deeplString
                     , sourceEnglishCulture
                     , requestDeeplCulture
-                    , cancellationToken: cancellationToken)
-                .Result
+                    , cancellationToken: cancellationToken))
                 .Text;
 
             translatedParameters

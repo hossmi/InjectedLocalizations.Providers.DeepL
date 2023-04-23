@@ -11,13 +11,14 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using System.Threading.Tasks;
 
 namespace InjectedLocalizations
 {
     public class GetTranslatedParametersTests
     {
         [Fact]
-        public void Can_get_translated_parameters()
+        public async Task Can_get_translated_parameters()
         {
             ITranslator translator;
             IParsedMember parsedMember;
@@ -48,8 +49,8 @@ namespace InjectedLocalizations
                     , new WordToken("apples")
                     , EndToken.End);
 
-            translatedParameters = translator
-                .GetTranslatedParameters("en", "es", parsedMember, default)
+            translatedParameters = (await translator
+                .GetTranslatedParameters("en", "es", parsedMember, default))
                 .ToArray();
 
             translatedParameters.Should().HaveCount(1);
