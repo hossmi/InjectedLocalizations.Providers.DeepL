@@ -21,7 +21,7 @@ namespace InjectedLocalizations
             {
                 options.ApiKey = "test";
                 options.Url = "test";
-                options.CultureMap = new Dictionary<CultureInfo, string>
+                options.TargetCultureMap = new Dictionary<CultureInfo, string>
                 {
                     { new CultureInfo("en"), "EN" },
                     { new CultureInfo("es"), "ES" },

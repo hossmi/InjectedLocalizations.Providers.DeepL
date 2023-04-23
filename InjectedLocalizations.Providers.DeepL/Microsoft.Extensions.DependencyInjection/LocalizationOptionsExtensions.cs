@@ -27,10 +27,11 @@ namespace Microsoft.Extensions.DependencyInjection
             if(configuration.Url.IsNullEmptyOrWhiteSpace())
                 throw new DeepLConfigurationException(nameof(configuration.Url));
 
-            configuration.CultureMap ??= BuildDefaultCultureMapValues().ToDictionary();
+            configuration.SourceCultureMap ??= new Dictionary<CultureInfo, string>();
+            configuration.TargetCultureMap ??= BuildDefaultTargetCultureMapValues().ToDictionary();
             options.AddService(typeof(IDeeplLocalizatonsProviderConfiguration), configuration);
 
-            cultureMap = new DefaultDeepLCultureMap(configuration.CultureMap);
+            cultureMap = new DefaultDeepLCultureMap(configuration.SourceCultureMap, configuration.TargetCultureMap);
             options.AddService(typeof(IDeeplCultureMap), cultureMap);
             
             options.SetProvider<DeepLLocalizationsProvider>(priority);
@@ -38,18 +39,19 @@ namespace Microsoft.Extensions.DependencyInjection
             return options;
         }
 
-        public static IEnumerable<KeyValuePair<CultureInfo, string>> BuildDefaultCultureMapValues()
+        public static IEnumerable<KeyValuePair<CultureInfo, string>> BuildDefaultTargetCultureMapValues()
         {
-            yield return new KeyValuePair<CultureInfo, string>(new CultureInfo("en"), "EN");
-            yield return new KeyValuePair<CultureInfo, string>(new CultureInfo("es"), "ES");
-            yield return new KeyValuePair<CultureInfo, string>(new CultureInfo("pt"), "PT-PT");
+            yield return new KeyValuePair<CultureInfo, string>(new CultureInfo("en-US"), "EN-US");
+            yield return new KeyValuePair<CultureInfo, string>(new CultureInfo("en-GB"), "EN-GB");
+            yield return new KeyValuePair<CultureInfo, string>(new CultureInfo("es-ES"), "ES");
         }
 
         private class PrvConfiguration : IDeeplLocalizatonsProviderConfiguration, IDeeplOptions
         {
             public string ApiKey { get; set; }
             public string Url { get; set; }
-            public IReadOnlyDictionary<CultureInfo, string> CultureMap { get; set; }
+            public IReadOnlyDictionary<CultureInfo, string> TargetCultureMap { get; set; }
+            public IReadOnlyDictionary<CultureInfo, string> SourceCultureMap { get; set; }
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using InjectedLocalizations.Configuration;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
+using FluentAssertions;
+using InjectedLocalizations.Configuration;
 using Xunit;
 
 namespace InjectedLocalizations
@@ -14,10 +14,12 @@ namespace InjectedLocalizations
             DefaultDeepLCultureMap cultureMap;
             string result;
 
-            cultureMap = new DefaultDeepLCultureMap(new Dictionary<CultureInfo, string>());
+            cultureMap = new DefaultDeepLCultureMap(new Dictionary<CultureInfo, string>(), new Dictionary<CultureInfo, string>());
 
-            result = cultureMap.MapToDeepl(new CultureInfo("es-ES"));
+            result = cultureMap.MapAsTargetLanguage(new CultureInfo("es-ES"));
+            result.Should().Be("es");
 
+            result = cultureMap.MapAsSourceLanguage(new CultureInfo("es-ES"));
             result.Should().Be("es");
         }
         [Fact]
@@ -28,16 +30,26 @@ namespace InjectedLocalizations
 
             cultureMap = new DefaultDeepLCultureMap(new Dictionary<CultureInfo, string>
             {
-                { new CultureInfo("en"), "EN1" },
-                { new CultureInfo("es-ES"), "ESP" },
+                { new CultureInfo("en"), "EN_source" },
+                { new CultureInfo("es-ES"), "ESP_source" },
+            }, new Dictionary<CultureInfo, string>
+            {
+                { new CultureInfo("en"), "EN_target" },
+                { new CultureInfo("es-ES"), "ESP_target" },
             });
 
-            enResult = cultureMap.MapToDeepl(new CultureInfo("en"));
-            esResult = cultureMap.MapToDeepl(new CultureInfo("es-ES"));
-            japResult = cultureMap.MapToDeepl(new CultureInfo("ja-JP"));
+            enResult = cultureMap.MapAsTargetLanguage(new CultureInfo("en"));
+            esResult = cultureMap.MapAsTargetLanguage(new CultureInfo("es-ES"));
+            japResult = cultureMap.MapAsTargetLanguage(new CultureInfo("ja-JP"));
+            enResult.Should().Be("EN_target");
+            esResult.Should().Be("ESP_target");
+            japResult.Should().Be("ja");
 
-            enResult.Should().Be("EN1");
-            esResult.Should().Be("ESP");
+            enResult = cultureMap.MapAsSourceLanguage(new CultureInfo("en"));
+            esResult = cultureMap.MapAsSourceLanguage(new CultureInfo("es-ES"));
+            japResult = cultureMap.MapAsSourceLanguage(new CultureInfo("ja-JP"));
+            enResult.Should().Be("EN_source");
+            esResult.Should().Be("ESP_source");
             japResult.Should().Be("ja");
         }
     }

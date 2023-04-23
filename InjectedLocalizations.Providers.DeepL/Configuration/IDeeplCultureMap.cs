@@ -4,6 +4,7 @@ namespace InjectedLocalizations.Configuration
 {
     public interface IDeeplCultureMap
     {
-        string MapToDeepl(CultureInfo culture);
+        string MapAsSourceLanguage(CultureInfo culture);
+        string MapAsTargetLanguage(CultureInfo culture);
     }
 }

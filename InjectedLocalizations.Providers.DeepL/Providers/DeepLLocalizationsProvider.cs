@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -16,7 +17,7 @@ namespace InjectedLocalizations.Providers
 {
     public class DeepLLocalizationsProvider : AbstractLocalizationsProvider
     {
-        private static readonly CultureInfo englishCulture = new CultureInfo("en");
+        private static readonly CultureInfo englishCulture = new CultureInfo("en-US");
         private readonly string sourceEnglishCulture;
         private readonly ITranslator translator;
         private readonly ILogger<DeepLLocalizationsProvider> logger;
@@ -33,7 +34,7 @@ namespace InjectedLocalizations.Providers
             this.configuration = configuration.ShouldBeNotNull(nameof(configuration));
             this.logger = logger.ShouldBeNotNull(nameof(logger));
             this.deeplCultureMap = deeplCultureMap.ShouldBeNotNull(nameof(deeplCultureMap));
-            this.sourceEnglishCulture = this.deeplCultureMap.MapToDeepl(englishCulture);
+            this.sourceEnglishCulture = this.deeplCultureMap.MapAsSourceLanguage(englishCulture);
             this.parser = parser.ShouldBeNotNull(nameof(parser));
 
             this.translator = new Translator(this.configuration.ApiKey, new TranslatorOptions
@@ -57,7 +58,7 @@ namespace InjectedLocalizations.Providers
                 return null;
 
             tokenSource = new CancellationTokenSource();
-            requestDeeplCulture = this.deeplCultureMap.MapToDeepl(request.Culture);
+            requestDeeplCulture = this.deeplCultureMap.MapAsTargetLanguage(request.Culture);
             parsedMembers = request
                 .InterfaceType
                 .GetMethodsAndProperties()
@@ -80,7 +81,7 @@ namespace InjectedLocalizations.Providers
                     })
                     .ToDictionary();
             }
-            catch (DeepLException ex)
+            catch (Exception ex)
             {
                 this.logger.LogError(ex, $"Troubles during {nameof(GetLocalizationsOrNull)}!");
                 return null;
