@@ -37,7 +37,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="DeepL.net" Version="1.6.0" />
-	  <PackageReference Include="InjectedLocalizations.Providers.AbstractLocalizationsProvider" Version="0.0.5" />
+	  <PackageReference Include="InjectedLocalizations.Providers.AbstractLocalizationsProvider" Version="0.0.7" />
 	  <PackageReference Include="JimenaTools.Extensions" Version="0.0.4" />
 	</ItemGroup>
 
