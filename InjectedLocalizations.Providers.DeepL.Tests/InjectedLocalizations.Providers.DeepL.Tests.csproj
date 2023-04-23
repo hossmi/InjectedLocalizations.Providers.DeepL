@@ -6,6 +6,8 @@
 		<RootNamespace>$(MSBuildProjectName.Split('.')[0])</RootNamespace>
 
 		<IsPackable>false</IsPackable>
+
+		<Configurations>Debug;Release;Integration</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -33,7 +35,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)'=='Integration' Or '$(Configuration)'=='Release'">
-		<PackageReference Include="InjectedLocalizations.Providers.DeepL" Version="0.0.2" />
+		<PackageReference Include="InjectedLocalizations.Providers.DeepL" Version="0.0.3" />
 	</ItemGroup>
 
 </Project>

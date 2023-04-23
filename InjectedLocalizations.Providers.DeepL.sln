@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InjectedLocalizations.Providers.DeepL.Tests", "InjectedLocalizations.Providers.DeepL.Tests\InjectedLocalizations.Providers.DeepL.Tests.csproj", "{0AB66B06-A466-4E23-A8A3-86A7B7B5DBF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InjectedLocalizations.Providers.DeepL.Tests", "InjectedLocalizations.Providers.DeepL.Tests\InjectedLocalizations.Providers.DeepL.Tests.csproj", "{0AB66B06-A466-4E23-A8A3-86A7B7B5DBF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,8 +28,8 @@ Global
 		{23878BA6-3840-4A44-9183-7B0B1FDC118A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0AB66B06-A466-4E23-A8A3-86A7B7B5DBF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0AB66B06-A466-4E23-A8A3-86A7B7B5DBF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0AB66B06-A466-4E23-A8A3-86A7B7B5DBF4}.Integration|Any CPU.ActiveCfg = Debug|Any CPU
-		{0AB66B06-A466-4E23-A8A3-86A7B7B5DBF4}.Integration|Any CPU.Build.0 = Debug|Any CPU
+		{0AB66B06-A466-4E23-A8A3-86A7B7B5DBF4}.Integration|Any CPU.ActiveCfg = Integration|Any CPU
+		{0AB66B06-A466-4E23-A8A3-86A7B7B5DBF4}.Integration|Any CPU.Build.0 = Integration|Any CPU
 		{0AB66B06-A466-4E23-A8A3-86A7B7B5DBF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AB66B06-A466-4E23-A8A3-86A7B7B5DBF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

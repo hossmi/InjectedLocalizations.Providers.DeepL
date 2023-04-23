@@ -12,9 +12,9 @@
 		<PackageProjectUrl>https://github.com/hossmi/InjectedLocalizations.Providers.DeepL</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>localizations,globalization,dependency,injection</PackageTags>
-		<Version>0.0.2</Version>
-		<FileVersion>0.0.2.0</FileVersion>
-		<AssemblyVersion>0.0.2.0</AssemblyVersion>
+		<Version>0.0.3</Version>
+		<FileVersion>0.0.3.0</FileVersion>
+		<AssemblyVersion>0.0.3.0</AssemblyVersion>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Configurations>Debug;Integration;Release</Configurations>
