@@ -35,7 +35,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)'=='Integration' Or '$(Configuration)'=='Release'">
-		<PackageReference Include="InjectedLocalizations.Providers.DeepL" Version="0.0.3" />
+		<PackageReference Include="InjectedLocalizations.Providers.DeepL" Version="0.0.4" />
 	</ItemGroup>
 
 </Project>
