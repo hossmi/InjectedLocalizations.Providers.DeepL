@@ -22,6 +22,11 @@ namespace InjectedLocalizations.Models
             this.Services[serviceType] = instance;
         }
 
+        public void GetCulturesFrom<TConfiguration>() where TConfiguration : ILocalizationsCultureConfiguration
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetAssembly(Assembly assembly)
         {
             throw new NotImplementedException();
@@ -38,6 +43,11 @@ namespace InjectedLocalizations.Models
         }
 
         public void SetCulture(CultureInfo culture, bool defaultCulture)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetCultures(CultureInfo defaultCulture, params CultureInfo[] otherCultures)
         {
             throw new NotImplementedException();
         }

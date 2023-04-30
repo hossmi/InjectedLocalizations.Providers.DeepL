@@ -22,10 +22,9 @@ namespace InjectedLocalizations
             FakeCurrentCultureProvider cultureProvider;
 
             services = new ServiceCollection();
-            services.AddInterfacedLocalizations(options =>
+            services.AddInjectedLocalizations(options =>
             {
-                options.SetCulture(new CultureInfo("en-US"), true);
-                options.SetCulture(new CultureInfo("es-ES"));
+                options.SetCultures(new CultureInfo("en-US"), new CultureInfo("es-ES"));
 
                 options.UseDeepLProvider(100, deeplOptions =>
                 {
