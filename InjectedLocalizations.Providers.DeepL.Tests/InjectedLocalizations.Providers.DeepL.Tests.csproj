@@ -12,7 +12,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="FluentAssertions" Version="6.10.0" />
-		<PackageReference Include="InjectedLocalizations" Version="0.0.9" />
+		<PackageReference Include="InjectedLocalizations" Version="0.0.10" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
 		<PackageReference Include="NSubstitute" Version="5.0.0" />
 		<PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.16">
@@ -35,7 +35,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)'=='Integration' Or '$(Configuration)'=='Release'">
-		<PackageReference Include="InjectedLocalizations.Providers.DeepL" Version="0.0.4" />
+		<PackageReference Include="InjectedLocalizations.Providers.DeepL" Version="0.0.5" />
 	</ItemGroup>
 
 </Project>
