@@ -12,9 +12,9 @@
 		<PackageProjectUrl>https://github.com/hossmi/InjectedLocalizations.Providers.DeepL</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>localizations,globalization,dependency,injection</PackageTags>
-		<Version>0.0.4</Version>
-		<FileVersion>0.0.4.0</FileVersion>
-		<AssemblyVersion>0.0.4.0</AssemblyVersion>
+		<Version>0.0.5</Version>
+		<FileVersion>0.0.5.0</FileVersion>
+		<AssemblyVersion>0.0.5.0</AssemblyVersion>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Configurations>Debug;Integration;Release</Configurations>
@@ -37,7 +37,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="DeepL.net" Version="1.6.0" />
-	  <PackageReference Include="InjectedLocalizations.Providers.AbstractLocalizationsProvider" Version="0.0.8" />
+	  <PackageReference Include="InjectedLocalizations.Providers.AbstractLocalizationsProvider" Version="0.0.10" />
 	  <PackageReference Include="JimenaTools.Extensions" Version="0.0.4" />
 	</ItemGroup>
 
